@@ -113,7 +113,7 @@ select:focus,.inp:focus{outline:1px solid var(--acc);outline-offset:-1px}
 .tabbar{display:none}
 
 /* ---------- dialogs ---------- */
-dialog{border:1px solid var(--line2);background:var(--bg);color:var(--tx);padding:0;border-radius:4px;width:min(620px,94vw);max-height:90dvh;overflow:hidden}
+dialog{position:fixed;inset:0;margin:auto;border:1px solid var(--line2);background:var(--bg);color:var(--tx);padding:0;border-radius:6px;width:min(620px,94vw);height:fit-content;max-height:88dvh;overflow:hidden}
 dialog[open]{display:flex;flex-direction:column}
 dialog::backdrop{background:rgba(0,0,0,.72)}
 .dh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
@@ -145,9 +145,11 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
 .tsum b{color:var(--tx)}
 
 /* exportar */
-.exw{background:#000;border:1px solid var(--line);border-radius:3px;max-height:48dvh;overflow:auto;display:flex;justify-content:center}
-.exw img{max-width:100%;height:auto;display:block}
-.exo{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.exdb{display:flex;flex-direction:column;overflow:hidden}
+.exw{flex:1;min-height:120px;max-height:56dvh;background:#000;border:1px solid var(--line);border-radius:3px;overflow:auto;-webkit-overflow-scrolling:touch}
+.exw img{width:100%;height:auto;display:block}
+.exw .ph{padding:40px 16px;text-align:center;color:var(--mut);font-size:13px}
+.exo{flex:none;display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .exo select{flex:1 1 140px}
 
 .menu button,.menu label{display:block;width:100%;text-align:left;padding:13px 4px;background:transparent;border:0;border-bottom:1px solid var(--line);font-size:15px;cursor:pointer}
@@ -163,6 +165,7 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
   .top{padding:0 10px;gap:6px}
   .brand{font-size:17px;letter-spacing:.02em}
   .brand i{display:none}
+  .brand i+*{}
   .btn{padding:0 10px}
   .col{min-width:0}
   .fl select{flex:1 1 45%}
@@ -183,7 +186,27 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
   .pick{min-height:66px}
   .tg{grid-template-columns:1fr}
   .tl{max-height:190px}
-  dialog{width:100vw;max-width:100vw;max-height:92dvh;margin:auto 0 0;border-radius:10px 10px 0 0;border-bottom:0}
+  dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);max-height:calc(100dvh - 40px);margin:auto}
+  .dh{padding:12px 14px}.dh h3{font-size:20px}
+  .db{padding:12px 14px}
+  .df{padding:10px 14px}
+  .df .note{flex-basis:100%;margin:0 0 2px}
+  .df .btn{flex:1;height:44px}
+  .exo select{flex:1 1 100%}
+  .exw{max-height:none}
+  select,.inp,input[type=search]{font-size:16px}
+  .top .btn{height:36px;padding:0 10px;font-size:13px}
+  .brand{font-size:18px}
+  .clockbar{padding:10px 12px;min-height:0;gap:10px}
+  .clockbar .big{font-size:24px}
+  .clockbar .tile{width:40px;height:40px}
+  .colhead{padding:8px 10px;gap:7px}
+  .pick{grid-template-columns:36px 40px minmax(0,1fr) 34px;gap:8px}
+  .pick .n{font-size:21px}
+  .pick .tile{width:40px;height:40px}
+  .pick.clock::after{display:none}
+  .tp{padding:10px}
+  .menu button{padding:15px 4px}
   .toast{bottom:calc(96px + env(safe-area-inset-bottom))}
   .legal{font-size:10.5px;padding:5px 10px}
 }
@@ -196,7 +219,7 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
   <div class="brand">LFA <i>Mock Draft</i> 2027</div>
   <div class="sp"></div>
   <button class="btn" id="bTrade">Trade</button>
-  <button class="btn pri" id="bExport">Exportar</button>
+  <button class="btn pri" id="bExport">Exportar Mock</button>
   <button class="btn" id="bMenu" aria-label="Menú">⋯</button>
 </header>
 
@@ -267,11 +290,11 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
 </dialog>
 
 <!-- Exportar -->
-<dialog id="dExport"><div class="dh"><h3>Exportar imagen</h3><button class="btn sm" data-close>Cerrar</button></div>
-  <div class="db">
+<dialog id="dExport"><div class="dh"><h3>Exportar Mock</h3><button class="btn sm" data-close>Cerrar</button></div>
+  <div class="db exdb">
     <div class="exo">
       <select id="exRound" aria-label="Rondas a incluir"></select>
-      <select id="exLayout" aria-label="Formato"><option value="vertical">Vertical (celular)</option><option value="wide">Ancho (2 columnas)</option></select>
+      <select id="exLayout" aria-label="Formato"><option value="vertical">Formato vertical</option><option value="wide">Formato ancho</option></select>
     </div>
     <div class="exw"><img id="exImg" alt="Vista previa del mock draft"></div>
   </div>
@@ -283,7 +306,6 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
   <div class="db menu">
     <button id="mUndo">Deshacer última selección</button>
     <button id="mReset">Reiniciar mock</button>
-    <label>Cargar CSV (equipos, picks, prospectos)<input id="file" type="file" accept=".csv" multiple hidden></label>
   </div>
 </dialog>
 
@@ -646,16 +668,7 @@ $('bTrade').onclick=openTrade;
 $('bMenu').onclick=()=>$('dMenu').showModal();
 $('mUndo').onclick=()=>{const n=history[history.length-1]; $('dMenu').close(); if(n!=null)undo(n)};
 $('mReset').onclick=()=>{ if(confirm('¿Reiniciar todo el mock?')){ $('dMenu').close(); selPos.clear();selSchools.clear(); build(txt.teams,txt.picks,txt.prospects); setupControls(); render(); } };
-$('file').addEventListener('change',async e=>{
-  for(const f of e.target.files){
-    const t=await f.text(), h=t.split(/\r?\n/)[0].toLowerCase();
-    if(h.includes('abbr')||h.includes('color'))txt.teams=t;
-    else if(h.includes('pick'))txt.picks=t;
-    else if(h.includes('name')||h.includes('rank'))txt.prospects=t;
-  }
-  try{localStorage.removeItem(KEY)}catch(_){}
-  selPos.clear();selSchools.clear(); build(txt.teams,txt.picks,txt.prospects); setupControls(); render(); $('dMenu').close(); e.target.value='';
-});
+
 
 /* ---------- Diálogos: cerrar ---------- */
 document.querySelectorAll('dialog').forEach(d=>{
