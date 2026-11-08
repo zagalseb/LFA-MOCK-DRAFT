@@ -113,12 +113,13 @@ select:focus,.inp:focus{outline:1px solid var(--acc);outline-offset:-1px}
 .tabbar{display:none}
 
 /* ---------- dialogs ---------- */
-dialog{position:fixed;inset:0;margin:auto;border:1px solid var(--line2);background:var(--bg);color:var(--tx);padding:0;border-radius:6px;width:min(620px,94vw);height:fit-content;max-height:88dvh;overflow:hidden}
-dialog[open]{display:flex;flex-direction:column}
+dialog{position:fixed;inset:auto;top:50%;left:50%;transform:translate(-50%,-50%);margin:0;border:1px solid var(--line2);background:var(--bg);color:var(--tx);padding:0;border-radius:6px;width:min(620px,94vw);max-width:94vw;height:auto;max-height:none;overflow:hidden;outline:none}
+dialog :focus:not(:focus-visible){outline:none}
+dialog[open]{display:block}
 dialog::backdrop{background:rgba(0,0,0,.72)}
 .dh{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
 .dh h3{margin:0;font:700 22px/1 var(--fd);letter-spacing:.06em;text-transform:uppercase}
-.db{padding:14px 16px;overflow-y:auto;flex:1;min-height:0}
+.db{padding:14px 16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .df{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
 .df .note{margin-right:auto;font-size:12px;color:var(--mut)}
 .hint{color:var(--mut);font-size:13px;margin:0 0 12px}
@@ -145,8 +146,8 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
 .tsum b{color:var(--tx)}
 
 /* exportar */
-.exdb{display:flex;flex-direction:column;overflow:hidden}
-.exw{flex:1;min-height:120px;max-height:56dvh;background:#000;border:1px solid var(--line);border-radius:3px;overflow:auto;-webkit-overflow-scrolling:touch}
+.exdb{overflow:hidden}
+.exw{min-height:120px;background:#000;border:1px solid var(--line);border-radius:3px;overflow:auto;-webkit-overflow-scrolling:touch}
 .exw img{width:100%;height:auto;display:block}
 .exw .ph{padding:40px 16px;text-align:center;color:var(--mut);font-size:13px}
 .exo{flex:none;display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
@@ -186,14 +187,13 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
   .pick{min-height:66px}
   .tg{grid-template-columns:1fr}
   .tl{max-height:190px}
-  dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px);max-height:calc(100dvh - 40px);margin:auto}
+  dialog{width:calc(100vw - 20px);max-width:calc(100vw - 20px)}
   .dh{padding:12px 14px}.dh h3{font-size:20px}
   .db{padding:12px 14px}
   .df{padding:10px 14px}
   .df .note{flex-basis:100%;margin:0 0 2px}
   .df .btn{flex:1;height:44px}
   .exo select{flex:1 1 100%}
-  .exw{max-height:none}
   select,.inp,input[type=search]{font-size:16px}
   .top .btn{height:36px;padding:0 10px;font-size:13px}
   .brand{font-size:18px}
@@ -669,6 +669,26 @@ $('bMenu').onclick=()=>$('dMenu').showModal();
 $('mUndo').onclick=()=>{const n=history[history.length-1]; $('dMenu').close(); if(n!=null)undo(n)};
 $('mReset').onclick=()=>{ if(confirm('¿Reiniciar todo el mock?')){ $('dMenu').close(); selPos.clear();selSchools.clear(); build(txt.teams,txt.picks,txt.prospects); setupControls(); render(); } };
 
+
+/* ---------- Diálogos: tamaño y foco (robusto en iPhone/Safari) ---------- */
+function fitDialog(d){
+  if(!d||!d.open)return;
+  const db=d.querySelector('.db'); if(!db)return;
+  const vh=(window.visualViewport?visualViewport.height:innerHeight);
+  const hh=(d.querySelector('.dh')?.offsetHeight||0)+(d.querySelector('.df')?.offsetHeight||0);
+  const max=Math.max(180,Math.floor(vh*0.9-hh-4));
+  db.style.maxHeight=max+'px';
+  const ex=db.querySelector('.exw');
+  if(ex){const o=db.querySelector('.exo');const cs=getComputedStyle(db);ex.style.maxHeight=Math.max(140,max-(o?o.offsetHeight+12:0)-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-2)+'px'}
+}
+const _showModal=HTMLDialogElement.prototype.showModal;
+HTMLDialogElement.prototype.showModal=function(){
+  _showModal.call(this); this.setAttribute('tabindex','-1'); this.focus({preventScroll:true});
+  this.querySelector('.db')&&(this.querySelector('.db').scrollTop=0);
+  fitDialog(this); requestAnimationFrame(()=>fitDialog(this));
+};
+const fitOpen=()=>document.querySelectorAll('dialog[open]').forEach(fitDialog);
+addEventListener('resize',fitOpen); if(window.visualViewport)visualViewport.addEventListener('resize',fitOpen);
 
 /* ---------- Diálogos: cerrar ---------- */
 document.querySelectorAll('dialog').forEach(d=>{
