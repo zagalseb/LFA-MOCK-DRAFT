@@ -95,6 +95,19 @@ select:focus,.inp:focus{outline:1px solid var(--acc);outline-offset:-1px}
 .tog{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--mut);cursor:pointer;user-select:none}
 .tog input{accent-color:var(--acc);width:16px;height:16px}
 .cnt{font-size:12px;color:var(--mut);margin-left:auto}
+.sw{display:inline-flex;align-items:center;gap:8px;cursor:pointer;user-select:none;font:600 12px/1 var(--fb);letter-spacing:.04em;color:var(--mut)}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw .tr{width:36px;height:20px;border-radius:10px;background:var(--line2);position:relative;transition:.15s;flex:none}
+.sw .tr::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--tx);transition:.15s}
+.sw input:checked+.tr{background:var(--acc)}
+.sw input:checked+.tr::after{left:18px;background:var(--bg)}
+.sw input:focus-visible+.tr{outline:2px solid var(--tx);outline-offset:2px}
+.sw.on{color:var(--tx)}
+.seg{display:inline-flex;align-items:center;gap:8px;font:600 12px/1 var(--fb);letter-spacing:.04em;color:var(--mut)}
+.seg .bx{display:inline-flex;border:1px solid var(--line2);border-radius:3px;overflow:hidden}
+.seg button{width:28px;height:26px;border:0;border-right:1px solid var(--line2);background:transparent;color:var(--mut);font:700 13px/1 var(--fd)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--acc);color:var(--acc-tx)}
 
 /* ---------- prospectos ---------- */
 .pr{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);min-height:62px}
@@ -228,6 +241,7 @@ dialog::backdrop{background:rgba(0,0,0,.72)}
     <div class="colhead">
       <div class="row">
         <span class="lbl">Orden</span>
+        <span class="seg" id="expSeg">Expansión<span class="bx" id="expBx"></span></span>
         <span class="cnt" id="count"></span>
       </div>
       <div class="row">
@@ -324,97 +338,107 @@ Osos,OSO,#e94624,1. DL · 2. DB/CB · 3. OL,DL|DB|CB|FS|SS|OL,LFA/icon_OSO.png
 Caudillos,CAU,#957633,1. OL · 2. DB/CB · 3. QB,OL|DB|CB|FS|SS|QB,LFA/icon_CAU.png
 Expansión 1,EX1,#d9dde3,,,@lfa
 Expansión 2,EX2,#aab1bb,,,@lfa
-Expansión 3,EX3,#7f8894,,,@lfa`,
+Expansión 3,EX3,#7f8894,,,@lfa
+Expansión 4,EX4,#5a626e,,,@lfa`,
   picks:`pick,round,slot,team,via
 1,1,1,Expansión 1,
 2,1,2,Expansión 2,
 3,1,3,Expansión 3,
-4,1,4,Mexicas,
-5,1,5,Gallos Negros,
-6,1,6,Reyes,
-7,1,7,Raptors,
-8,1,8,Mexicas,Dinos
-9,1,9,Osos,
-10,1,10,Caudillos,
-11,2,1,Expansión 1,
-12,2,2,Expansión 2,
-13,2,3,Expansión 3,
-14,2,4,Mexicas,
-15,2,5,Gallos Negros,
-16,2,6,Reyes,
-17,2,7,Raptors,
-18,2,8,Caudillos,Dinos
-19,2,9,Osos,
-20,2,10,Caudillos,
-21,3,1,Expansión 1,
-22,3,2,Expansión 2,
-23,3,3,Expansión 3,
-24,3,4,Mexicas,
-25,3,5,Raptors,Gallos Negros
-26,3,6,Reyes,
-27,3,7,Raptors,
-28,3,9,Osos,
-29,3,10,Caudillos,
-30,4,1,Expansión 1,
-31,4,2,Expansión 2,
-32,4,3,Expansión 3,
-33,4,4,Mexicas,
-34,4,5,Reyes,Gallos Negros
-35,4,6,Dinos,Reyes
-36,4,7,Raptors,
-37,4,8,Dinos,
-38,4,9,Osos,
-39,4,10,Caudillos,
-40,5,1,Expansión 1,
-41,5,2,Expansión 2,
-42,5,3,Expansión 3,
-43,5,4,Mexicas,
-44,5,5,Mexicas,Gallos Negros
-45,5,6,Reyes,
-46,5,7,Raptors,
-47,5,8,Dinos,
-48,5,9,Osos,
-49,5,10,Caudillos,
-50,6,1,Expansión 1,
-51,6,2,Expansión 2,
-52,6,3,Expansión 3,
-53,6,4,Osos,Mexicas
-54,6,5,Gallos Negros,
-55,6,6,Raptors,Reyes
-56,6,7,Raptors,
-57,6,8,Dinos,
-58,6,9,Osos,
-59,6,10,Caudillos,
-60,7,1,Expansión 1,
-61,7,2,Expansión 2,
-62,7,3,Expansión 3,
-63,7,4,Mexicas,
-64,7,5,Gallos Negros,
-65,7,6,Reyes,
-66,7,7,Raptors,
-67,7,8,Dinos,
-68,7,9,Osos,
-69,7,10,Caudillos,
-70,8,1,Expansión 1,
-71,8,2,Expansión 2,
-72,8,3,Expansión 3,
-73,8,4,Mexicas,
-74,8,5,Gallos Negros,
-75,8,6,Reyes,
-76,8,7,Raptors,
-77,8,8,Dinos,
-78,8,9,Osos,
-79,8,10,Caudillos,
-80,9,1,Expansión 1,
-81,9,2,Expansión 2,
-82,9,3,Expansión 3,
-83,9,4,Mexicas,
-84,9,5,Gallos Negros,
-85,9,6,Reyes,
-86,9,7,Raptors,
-87,9,8,Dinos,
-88,9,9,Osos,
-89,9,10,Caudillos,`,
+4,1,4,Expansión 4,
+5,1,5,Mexicas,
+6,1,6,Gallos Negros,
+7,1,7,Reyes,
+8,1,8,Raptors,
+9,1,9,Mexicas,Dinos
+10,1,10,Osos,
+11,1,11,Caudillos,
+12,2,1,Expansión 1,
+13,2,2,Expansión 2,
+14,2,3,Expansión 3,
+15,2,4,Expansión 4,
+16,2,5,Mexicas,
+17,2,6,Gallos Negros,
+18,2,7,Reyes,
+19,2,8,Raptors,
+20,2,9,Caudillos,Dinos
+21,2,10,Osos,
+22,2,11,Caudillos,
+23,3,1,Expansión 1,
+24,3,2,Expansión 2,
+25,3,3,Expansión 3,
+26,3,4,Expansión 4,
+27,3,5,Mexicas,
+28,3,6,Raptors,Gallos Negros
+29,3,7,Reyes,
+30,3,8,Raptors,
+31,3,10,Osos,
+32,3,11,Caudillos,
+33,4,1,Expansión 1,
+34,4,2,Expansión 2,
+35,4,3,Expansión 3,
+36,4,4,Expansión 4,
+37,4,5,Mexicas,
+38,4,6,Reyes,Gallos Negros
+39,4,7,Dinos,Reyes
+40,4,8,Raptors,
+41,4,9,Dinos,
+42,4,10,Osos,
+43,4,11,Caudillos,
+44,5,1,Expansión 1,
+45,5,2,Expansión 2,
+46,5,3,Expansión 3,
+47,5,4,Expansión 4,
+48,5,5,Mexicas,
+49,5,6,Mexicas,Gallos Negros
+50,5,7,Reyes,
+51,5,8,Raptors,
+52,5,9,Dinos,
+53,5,10,Osos,
+54,5,11,Caudillos,
+55,6,1,Expansión 1,
+56,6,2,Expansión 2,
+57,6,3,Expansión 3,
+58,6,4,Expansión 4,
+59,6,5,Osos,Mexicas
+60,6,6,Gallos Negros,
+61,6,7,Raptors,Reyes
+62,6,8,Raptors,
+63,6,9,Dinos,
+64,6,10,Osos,
+65,6,11,Caudillos,
+66,7,1,Expansión 1,
+67,7,2,Expansión 2,
+68,7,3,Expansión 3,
+69,7,4,Expansión 4,
+70,7,5,Mexicas,
+71,7,6,Gallos Negros,
+72,7,7,Reyes,
+73,7,8,Raptors,
+74,7,9,Dinos,
+75,7,10,Osos,
+76,7,11,Caudillos,
+77,8,1,Expansión 1,
+78,8,2,Expansión 2,
+79,8,3,Expansión 3,
+80,8,4,Expansión 4,
+81,8,5,Mexicas,
+82,8,6,Gallos Negros,
+83,8,7,Reyes,
+84,8,8,Raptors,
+85,8,9,Dinos,
+86,8,10,Osos,
+87,8,11,Caudillos,
+88,9,1,Expansión 1,
+89,9,2,Expansión 2,
+90,9,3,Expansión 3,
+91,9,4,Expansión 4,
+92,9,5,Mexicas,
+93,9,6,Gallos Negros,
+94,9,7,Reyes,
+95,9,8,Raptors,
+96,9,9,Dinos,
+97,9,10,Osos,
+98,9,11,Caudillos,`,
   prospects:[]
 };
 
@@ -452,7 +476,7 @@ const tileHTML=(logo,abbr)=>`<div class="tile">${logo?`<img src="${logo}" alt=""
 const initials=s=>String(s).split(/\s+/).map(w=>w[0]).join('').slice(0,3).toUpperCase();
 
 /* ---------- Estado ---------- */
-let hasRank=false, teams={}, picks=[], prospects=[], trades=[], history=[], cur=null, rounds=9, maxRound=9;
+let numExp=3, hasRank=false, teams={}, picks=[], prospects=[], trades=[], history=[], cur=null, rounds=9, maxRound=9;
 let teamFilter='', statusF='', sortBy='', query='', onlyNeed=false;
 const selPos=new Set(), selSchools=new Set();
 const KEY='lfa-mock-2027-v2';
@@ -469,15 +493,21 @@ function build(t,p,pr){
   rounds=maxRound; trades=[]; history=[]; cur=null;
   teamFilter='';
 }
-function save(){ try{localStorage.setItem(KEY,JSON.stringify({picks,trades,history,cur,rounds}))}catch(e){} }
+function save(){ try{localStorage.setItem(KEY,JSON.stringify({picks,trades,history,cur,rounds,numExp}))}catch(e){} }
 function restore(){
   try{
     const s=JSON.parse(localStorage.getItem(KEY)||'null'); if(!s||!s.picks||s.picks.length!==picks.length)return;
-    picks=s.picks;trades=s.trades||[];history=s.history||[];cur=s.cur;rounds=Math.min(s.rounds||maxRound,maxRound);
+    picks=s.picks;trades=s.trades||[];history=s.history||[];cur=s.cur;numExp=s.numExp!=null?s.numExp:(s.showExp===false?0:3);rounds=Math.min(s.rounds||maxRound,maxRound);
     const ids=new Set(prospects.map(p=>p.id)); picks.forEach(k=>{if(k.player!=null&&!ids.has(k.player))k.player=null});
   }catch(e){}
 }
-const visible=()=>picks.filter(k=>k.round<=rounds);
+const isExp=t=>/^Expansi[oó]n/i.test(t||'');
+const expNum=t=>isExp(t)?(+(String(t).match(/\d+/)||[0])[0]):0;
+const maxExp=()=>Math.max(0,...picks.map(k=>expNum(k.orig)));
+const offExp=t=>expNum(t)>numExp;
+const active=()=>picks.filter(k=>!offExp(k.orig));
+const dn=n=>active().findIndex(k=>k.n===n)+1;
+const visible=()=>active().filter(k=>k.round<=rounds);
 const taken=()=>new Set(picks.filter(k=>k.player!=null).map(k=>k.player));
 const pl=k=>k.player!=null?prospects.find(x=>x.id===k.player):null;
 function clockPick(){
@@ -496,7 +526,7 @@ function renderBoard(){
     const tm=teams[k.owner], p=pl(k);
     const via=k.owner!==k.orig?`<span class="via">vía ${esc(k.orig)}</span>`:'';
     h+=`<div class="pick ${ck&&ck.n===k.n?'clock':''}" data-n="${k.n}" style="--tc:${tm.color}">
-      <div class="n">${k.n}</div>${tileHTML(tm.logo,tm.abbr)}
+      <div class="n">${dn(k.n)}</div>${tileHTML(tm.logo,tm.abbr)}
       <div style="min-width:0"><div class="t">${esc(k.owner)}${via}</div>
       <div class="p">${p?`<b>${esc(p.name)}</b> · ${esc(p.pos)} · ${esc(p.school)}`:(ck&&ck.n===k.n?'Elige un prospecto':'—')}</div></div>
       ${p?`<button class="x" data-undo="${k.n}" aria-label="Quitar selección">×</button>`:'<span></span>'}</div>`;
@@ -517,7 +547,7 @@ function renderClock(){
   if(!ck){ el.style.setProperty('--tc','#3b8f4f'); el.innerHTML=`<div><div class="big">Draft completo</div><div class="sub">Ya puedes exportar tu mock como imagen.</div></div>`; return }
   const tm=teams[ck.owner]; el.style.setProperty('--tc',tm.color);
   el.innerHTML=`${tileHTML(tm.logo,tm.abbr)}<div style="min-width:0;flex:1"><div class="tag">EN EL RELOJ</div>
-    <div class="big">#${ck.n} · ${esc(ck.owner)}</div>
+    <div class="big">#${dn(ck.n)} · ${esc(ck.owner)}</div>
     <div class="sub">Ronda ${ck.round}${ck.owner!==ck.orig?` · vía ${esc(ck.orig)}`:''}${tm.needs?` · Necesidades: <em>${esc(tm.needs)}</em>`:''}</div></div>`;
 }
 
@@ -557,8 +587,11 @@ function render(){ renderBoard(); renderClock(); renderPool(); $('tabBoard').tex
 /* ---------- Setup de controles ---------- */
 function setupControls(){
   $('rounds').innerHTML=Array.from({length:maxRound},(_,i)=>`<option value="${i+1}" ${i+1===rounds?'selected':''}>${i+1} ${i?'rondas':'ronda'}</option>`).join('');
-  const names=[...new Set(picks.map(k=>k.owner).concat(picks.map(k=>k.orig)))].sort();
+  const names=[...new Set(active().map(k=>k.owner).concat(active().map(k=>k.orig)))].sort();
+  if(teamFilter&&!names.includes(teamFilter))teamFilter='';
+  const mx=maxExp(); numExp=Math.min(numExp,mx); $('expBx').innerHTML=Array.from({length:mx+1},(_,i)=>`<button data-x="${i}" class="${i===numExp?'on':''}" aria-label="${i} equipos de expansión">${i}</button>`).join(''); $('expSeg').style.display=mx?'':'none';
   $('teamf').innerHTML='<option value="">Todos los equipos</option>'+names.map(n=>`<option>${esc(n)}</option>`).join('');
+  $('teamf').value=teamFilter;
   const ps=POSORDER.filter(p=>prospects.some(x=>grp(x.pos)===p));
   $('pchips').innerHTML=ps.map(p=>`<button class="chip" data-p="${p}">${p}</button>`).join('');
   const ss=[...new Set(prospects.map(p=>p.status).filter(Boolean))];
@@ -572,7 +605,7 @@ function setupControls(){
 function draft(id){
   const k=clockPick(); if(!k)return;
   k.player=id; history.push(k.n); cur=null;
-  const p=prospects.find(x=>x.id===id); toast(`#${k.n} ${k.owner}: ${p.name}`);
+  const p=prospects.find(x=>x.id===id); toast(`#${dn(k.n)} ${k.owner}: ${p.name}`);
   render();
 }
 function undo(n){
@@ -607,6 +640,24 @@ $('rounds').onchange=e=>{
   rounds=n; cur=null; render();
 };
 
+/* ---------- Equipos de expansión ---------- */
+$('expBx').addEventListener('click',e=>{
+  const b=e.target.closest('[data-x]'); if(!b)return; const n=+b.dataset.x; if(n===numExp)return;
+  if(n<numExp){
+    const gone=t=>expNum(t)>n;
+    const used=picks.filter(k=>gone(k.orig)&&k.player!=null).length;
+    const tr=trades.some(t=>t.moves.some(m=>gone(m.from)||gone(m.to)||gone(picks.find(k=>k.n===m.n).orig)));
+    const msg=[used?`se quitarán ${used} selecciones de esos equipos`:'',tr?'se desharán todos los trades':''].filter(Boolean).join(' y ');
+    if(msg&&!confirm(`Al quitar equipos de expansión ${msg}. ¿Continuar?`))return;
+    if(tr){ for(let i=trades.length-1;i>=0;i--) trades[i].moves.forEach(m=>{picks.find(k=>k.n===m.n).owner=m.from}); trades=[]; }
+    picks.forEach(k=>{if(gone(k.orig))k.player=null});
+    history=history.filter(h=>{const k=picks.find(x=>x.n===h);return k&&!gone(k.orig)});
+  }
+  numExp=n; cur=null;
+  setupControls(); $('rounds').value=rounds; render();
+  toast(n?`${n} ${n===1?'equipo':'equipos'} de expansión`:'Sin equipos de expansión');
+});
+
 /* ---------- Escuelas / regiones ---------- */
 function schoolInfo(){
   const m={}; prospects.forEach(p=>{(m[p.school]??={name:p.school,logo:p.logo,region:p.region||'Otras',n:0}).n++}); return Object.values(m).sort((a,b)=>a.name.localeCompare(b.name,'es'));
@@ -627,7 +678,7 @@ $('schClear').onclick=()=>{selSchools.clear();renderSchools();renderPool()};
 /* ---------- Trades (varias picks por lado) ---------- */
 const sel={A:new Set(),B:new Set()};
 function openTrade(){
-  const names=Object.keys(teams).filter(t=>picks.some(k=>k.owner===t)).sort();
+  const names=Object.keys(teams).filter(t=>visible().some(k=>k.owner===t)).sort();
   if(names.length<2){toast('No hay equipos suficientes');return}
   const ck=clockPick(), a=ck?ck.owner:names[0];
   $('tA').innerHTML=$('tB').innerHTML=names.map(n=>`<option>${esc(n)}</option>`).join('');
@@ -638,9 +689,9 @@ function renderTrade(){
   [['A','lA'],['B','lB']].forEach(([s,id])=>{
     const team=$('t'+s).value;
     const open=visible().filter(k=>k.owner===team&&k.player==null);
-    $(id).innerHTML=open.length?open.map(k=>`<label class="tp ${sel[s].has(k.n)?'sel':''}"><input type="checkbox" data-side="${s}" data-n="${k.n}" ${sel[s].has(k.n)?'checked':''}><span class="n">#${k.n}</span><span class="m">Ronda ${k.round}${k.orig!==k.owner?` · vía ${esc(k.orig)}`:''}</span></label>`).join(''):'<div class="empty" style="padding:18px">Sin picks disponibles</div>';
+    $(id).innerHTML=open.length?open.map(k=>`<label class="tp ${sel[s].has(k.n)?'sel':''}"><input type="checkbox" data-side="${s}" data-n="${k.n}" ${sel[s].has(k.n)?'checked':''}><span class="n">#${dn(k.n)}</span><span class="m">Ronda ${k.round}${k.orig!==k.owner?` · vía ${esc(k.orig)}`:''}</span></label>`).join(''):'<div class="empty" style="padding:18px">Sin picks disponibles</div>';
   });
-  const A=$('tA').value,B=$('tB').value, fmt=s=>s.size?[...s].sort((x,y)=>x-y).map(n=>'#'+n).join(', '):'nada';
+  const A=$('tA').value,B=$('tB').value, fmt=s=>s.size?[...s].sort((x,y)=>x-y).map(n=>'#'+dn(n)).join(', '):'nada';
   $('tsum').innerHTML=A===B?'Elige dos equipos distintos.':`<b>${esc(A)}</b> recibe: ${fmt(sel.B)}<br><b>${esc(B)}</b> recibe: ${fmt(sel.A)}`;
 }
 $('tA').onchange=()=>{sel.A.clear();renderTrade()}; $('tB').onchange=()=>{sel.B.clear();renderTrade()};
@@ -652,7 +703,7 @@ $('tOk').onclick=()=>{
   const moves=[];
   sel.A.forEach(n=>moves.push({n,from:A,to:B})); sel.B.forEach(n=>moves.push({n,from:B,to:A}));
   moves.forEach(m=>{picks.find(k=>k.n===m.n).owner=m.to});
-  const f=s=>[...s].sort((x,y)=>x-y).map(n=>'#'+n).join(', ')||'nada';
+  const f=s=>[...s].sort((x,y)=>x-y).map(n=>'#'+dn(n)).join(', ')||'nada';
   trades.push({text:`${A} envía ${f(sel.A)} a ${B} por ${f(sel.B)}`,moves});
   $('dTrade').close(); toast('Trade registrado'); render();
 };
@@ -734,7 +785,7 @@ async function drawExport(){
     const tm=teams[k.owner], p=pl(k);
     g.fillStyle='#14171c';g.fillRect(x,y,colW,rowH-8);
     g.fillStyle=tm.color;g.fillRect(x,y,7,rowH-8);
-    g.fillStyle='#f3f1ea';g.font=`700 36px ${FD}`;g.textAlign='right';g.fillText(String(k.n),x+82,y+42);
+    g.fillStyle='#f3f1ea';g.font=`700 36px ${FD}`;g.textAlign='right';g.fillText(String(dn(k.n)),x+82,y+42);
     g.fillStyle='#8d939e';g.font=`600 14px ${FB}`;g.fillText('R'+k.round,x+82,y+64);g.textAlign='left';
     tile(g,imgs[tm.logo],x+98,y+10,60,tm.abbr);
     const tx=x+176, tw=colW-176-84;
